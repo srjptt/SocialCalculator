@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @EnableAsync
 @SpringBootApplication
-@ComponentScan({"com.springboot"})
+@ComponentScan({"com.springboot.*"})
 public class App /*extends SpringBootServletInitializer*/ {
     public static void main(String[] args){
                      SpringApplication.run(App.class, args);
