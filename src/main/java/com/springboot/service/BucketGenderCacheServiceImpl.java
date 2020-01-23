@@ -11,7 +11,6 @@ import java.util.Set;
 @Service
 public class BucketGenderCacheServiceImpl {
 
-    Set<String> mappingLines = FlatFileLoader.loadFlatFile(Constants.FLAT_FILES_PATH + Constants.LABEL1_BUCKET_MAPPING);
 
 
 }
