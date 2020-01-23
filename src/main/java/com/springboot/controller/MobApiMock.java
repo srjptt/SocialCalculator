@@ -1,7 +1,6 @@
 package com.springboot.controller;
 
 import com.springboot.pojo.PDPSro;
-import com.springboot.request.GetPdpDetailsRequest;
 import com.springboot.response.GetPdpDetailsResponse;
 import com.springboot.service.MobApiMockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,12 @@ public class MobApiMock {
     @Autowired
     MobApiMockService mobApiMockService;
 
-    @RequestMapping(value = "getPdpDetails", method = RequestMethod.POST)
+    @RequestMapping(value = "getPdpDetails", method = RequestMethod.GET)
     @ResponseBody
-    public GetPdpDetailsResponse getPdpDetails(@RequestBody GetPdpDetailsRequest request){
+    public GetPdpDetailsResponse getPdpDetails(@RequestParam long pogId){
         GetPdpDetailsResponse response = new GetPdpDetailsResponse();
         try {
-            PDPSro details = mobApiMockService.getPdpDetails(request);
+            PDPSro details = mobApiMockService.getPdpDetails(pogId);
             response.setPdpsro(details);
         }catch (Exception e){
 

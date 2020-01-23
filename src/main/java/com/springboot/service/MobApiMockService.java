@@ -25,10 +25,11 @@ public class MobApiMockService {
         this.mapper = new ObjectMapper();
     }
 
-    public PDPSro getPdpDetails(GetPdpDetailsRequest request){
+    public PDPSro getPdpDetails(long pogId){
         PDPSro sro = new PDPSro();
         String url = "http://mobileapi.snapdeal.com/service/mobapi/getPdpDetails";
         try{
+            GetPdpDetailsRequest request = new GetPdpDetailsRequest(pogId);
             StringEntity entity = new StringEntity(mapper.writeValueAsString(request));
             HttpResponse response = httpClient.post(new URI(url), entity);
             String data = httpClient.getResponseContent(response);

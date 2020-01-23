@@ -10,25 +10,23 @@ public class GetPdpDetailsRequest {
     private String requestProtocol;
 
     @Setter
-    private String pogId;
+    private Long pogId;
 
-    @Setter
     private String deviceType;
-
-    @Setter
     private String locale;
-
-    @Setter
     private String zone;
-
-    @Setter
     private String pincode;
-
-    @Setter
     private String brandAligned;
 
-    public GetPdpDetailsRequest() {
+    public GetPdpDetailsRequest(long pogId) {
         this.requestProtocol="PROTOCOL_JSON";
         this.responseProtocol="PROTOCOL_JSON";
+        this.pogId=pogId;
+        this.deviceType="WEB";
+        this.locale="en";
+        this.zone="";
+        this.pincode="";
+        this.brandAligned="false";
+
     }
 }
