@@ -23,6 +23,6 @@ public class RecommendationServiceImpl {
             pogs.addAll(Optional.ofNullable(brandPogCache.getBrandPogMap().get(brand)).orElse(new ArrayList<>()));
         }
         Collections.shuffle(pogs);
-        return pogs.subList(0,limit-1);
+        return (pogs.size() < limit) ? pogs : pogs.subList(0,limit);
     }
 }

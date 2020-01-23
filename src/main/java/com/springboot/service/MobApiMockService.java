@@ -34,8 +34,7 @@ public class MobApiMockService {
             String data = httpClient.getResponseContent(response);
             Map<String, Object> responseData =  mapper.readValue(data, Map.class);
             Map<String, Object> pdpSroMap = (Map<String, Object>) responseData.get("pdpsro");
-            CommonProductOfferGroupDTO dto = mapper.convertValue(pdpSroMap.get("commonProductOfferGroupDTO"), CommonProductOfferGroupDTO.class);
-            sro.setCommonProductOfferGroupDTO(dto);
+            sro = mapper.convertValue(pdpSroMap, PDPSro.class);
         }catch (Exception e){
             e.printStackTrace();
 

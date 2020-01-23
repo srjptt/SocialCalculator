@@ -2,9 +2,9 @@ package com.springboot.service;
 
 import com.snapdeal.base.cache.CacheManager;
 import com.springboot.cache.BrandPogCache;
-import jdk.internal.joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.google.common.base.Strings;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.util.*;
 
                     String[] split = line.split(",", -1);
                     List<String> pogList = new ArrayList<>();
-                    String[] split1 = split[1].split("", -1);
+                    String[] split1 = split[1].split(";", -1);
                     Collections.addAll(pogList, split1);
                     brandMap.put(split[0], pogList);
                 }

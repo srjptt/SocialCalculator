@@ -13,7 +13,7 @@ public class StartupServiceImpl {
     @Autowired
     private BrandPogCacheServiceImpl brandPogCacheService;
 
-    private void init(){
+    public void init(){
         brandPogCacheService.fillBrandPogCache();
     }
 
