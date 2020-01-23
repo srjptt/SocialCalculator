@@ -12,5 +12,6 @@ public class FeedRequest {
     private String userId;
     private String brandName;
     private String gender;
+    private Integer limit;
 
 }
