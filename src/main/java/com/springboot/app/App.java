@@ -1,11 +1,7 @@
 package com.springboot.app;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -14,11 +10,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @EnableAsync
 @SpringBootApplication
-@ComponentScan({"com.springboot.controller"})
+@ComponentScan({"com.springboot.*"})
 public class App /*extends SpringBootServletInitializer*/ {
+
+
     public static void main(String[] args){
                      SpringApplication.run(App.class, args);
-
 
     }
 
