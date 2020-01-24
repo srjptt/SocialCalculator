@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -57,9 +58,11 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
-    private static Set<String> loadFlatFile(String path) throws IOException {
+    private Set<String> loadFlatFile(String path) throws IOException {
         Set<String> keys = new LinkedHashSet<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+
+
+        try (BufferedReader br = new BufferedReader(new FileReader(getTestData(path)))) {
             String value;
             while ((value = br.readLine()) != null) {
                 if (!Strings.isNullOrEmpty(value)) {
@@ -70,5 +73,15 @@ import java.util.stream.Collectors;
         return Collections.unmodifiableSet(keys);
     }
 
+    private File getTestData(String filePath){
+        try {
+            File data  = new File(
+                    getClass().getClassLoader().getResource(filePath).getFile());
+            return data;
+        }catch (Exception e){
+
+        }
+        return null;
+    }
 
 }
