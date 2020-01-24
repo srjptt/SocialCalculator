@@ -68,7 +68,7 @@ public class GenericHttpClientUtility {
                 }
             }
         }
-        return execute(get, sslEnabled);
+        return execute(get, sslEnabled, true);
     }
 
     public HttpResponse get(Map<String, Object> requestParameters, String url) {
@@ -114,7 +114,7 @@ public class GenericHttpClientUtility {
             }
             httpPatch.setEntity(httpEntity);
         }
-        HttpResponse httpResponse = httpClient.execute(httpPatch);
+        HttpResponse httpResponse = execute(httpPatch,true,false);
         return httpResponse;
     }
 
@@ -147,7 +147,7 @@ public class GenericHttpClientUtility {
 
     private HttpResponse sendGet(URI url, boolean sslEnabled) {
         HttpGet get = new HttpGet(url);
-        return execute(get, sslEnabled);
+        return execute(get, sslEnabled, true);
     }
 
     private HttpResponse sendPost(URI url, HttpEntity httpEntity, Map<String, String> headerMap, boolean sslEnabled) {
@@ -160,11 +160,12 @@ public class GenericHttpClientUtility {
                 }
             }
         }
-        return execute(post, sslEnabled);
+        return execute(post, sslEnabled,true);
     }
 
-    private synchronized HttpResponse execute(HttpUriRequest request, boolean sslEnabled) {
+    public synchronized HttpResponse execute(HttpUriRequest request, boolean sslEnabled, boolean header) {
         request.addHeader(new BasicHeader("User-Agent", this.userAgent));
+        if(header)
         request.addHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
         HttpClientContext context = HttpClientContext.create();
         context.setCookieStore(this.cookieStore);

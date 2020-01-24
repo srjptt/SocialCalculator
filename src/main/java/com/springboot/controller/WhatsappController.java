@@ -1,7 +1,9 @@
 package com.springboot.controller;
 
+import com.springboot.request.CreateAdminRequest;
 import com.springboot.request.CreateWhatsAppGroupRequest;
 import com.springboot.response.CreateGroupResponse;
+import com.springboot.response.SetAdminResponse;
 import com.springboot.service.WhatsappService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +27,7 @@ public class WhatsappController {
         return response;
     }
 
+
     @RequestMapping(value = "/urlAccessImpression", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String createGroup(@RequestParam String groupId, @RequestParam String userId, @RequestParam String pogId) {
@@ -36,4 +39,18 @@ public class WhatsappController {
         }
         return "updated successfully";
     }
+
+    @RequestMapping(value = "/createAdmin", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public SetAdminResponse createAdmin(@RequestBody CreateAdminRequest request) {
+        SetAdminResponse response = new SetAdminResponse();
+        try {
+         //   Thread.sleep(60000);
+            response.setMessage(whatsappService.setGroupAdmin(request.getGroupId(),request.getWhatsappId()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
 }

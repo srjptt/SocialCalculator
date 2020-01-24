@@ -9,16 +9,25 @@ import com.springboot.pojo.WhatsappTextPayload;
 import com.springboot.request.*;
 import com.springboot.response.CreateGroupResponse;
 import com.springboot.utils.GenericHttpClientUtility;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("whatsappService")
 public class WhatsappService {
@@ -82,7 +91,8 @@ public class WhatsappService {
                 String groupInviteLink = getGroupLink(groupId);
                 if (null != groupInviteLink) {
                     sendWhatsappLink(groupInviteLink, request.getPhoneNumber());
-                    setGroupAdmin(groupId,request.getPhoneNumber());
+                    //setGroupIcon(groupId);
+                   // setGroupAdmin(groupId,request.getPhoneNumber());
                     response.setLink(groupInviteLink);
                     response.setGroupId(groupId);
                 }
@@ -190,20 +200,31 @@ public class WhatsappService {
         return responseMap;
     }
 
-    private void setGroupAdmin(String groupId , String adminId) throws JsonProcessingException {
+    public Integer setGroupAdmin(String groupId , String adminId) throws JsonProcessingException {
+
         String url = new StringBuilder(endPoint).append("groups").append("/").append(groupId).append("/").append("admins").toString();
         CreateGroupAdminRequest createGroupAdminRequest = new CreateGroupAdminRequest();
         List<String> waIds = new ArrayList<>();
         waIds.add(adminId);
         createGroupAdminRequest.setWa_ids(waIds);
-        getHttpResponse(url,new HashMap<>(), mapper.writeValueAsString(createGroupAdminRequest), RequestMethod.POST);
+        return getHttpResponse(url,new HashMap<>(), mapper.writeValueAsString(createGroupAdminRequest), RequestMethod.PATCH).getStatusLine().getStatusCode();
+   }
+
+    private void setGroupIcon(String groupId) throws JsonProcessingException {
+        String url = endPoint + "groups" + "/" + groupId + "/" + "icon";
+        File file = new File("/Users/mehak.goyal/Desktop/Snapdeal_Logo_new.png");
+        HttpPost post = new HttpPost(url);
+        post.setHeader("Authorization", token);
+        post.setHeader("Content-Type", "image/png");
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder.addBinaryBody("upfile", file);
+        HttpEntity entity = builder.build();
+        post.setEntity(entity);
+        HttpResponse response = httpClient.execute(post,true, false);
     }
 
-    private void setGroupIcon(String groupId, String filePath) throws JsonProcessingException {
-        String url = new StringBuilder(endPoint).append("groups").append("/").append(groupId).append("/").append("icon").toString();
-        CreateGroupIconRequest createGroupIconRequest = new CreateGroupIconRequest();
-        Map<String, String> headersMap = new HashMap<>();
-        headersMap.put("Content-Type","image/png");
-       // getHttpResponse(url,headersMap, mapper.writeValueAsBytes(createGroupIconRequest),RequestMethod.POST);
-    }
+
+
+
 }
