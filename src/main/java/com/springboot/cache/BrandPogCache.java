@@ -1,8 +1,10 @@
 package com.springboot.cache;
 
 import com.snapdeal.base.annotations.Cache;
+import com.springboot.pojo.PDPSro;
 import lombok.Data;
 import lombok.ToString;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,6 @@ import java.util.Map;
 @Cache(name = "brandPogCache")
 public class BrandPogCache {
 
-    private Map<String,List<String>> brandPogMap;
+    private Map<String,List<PDPSro>> brandPogMap;
 
 }

@@ -14,7 +14,7 @@ public class MobApiMock {
 
     @RequestMapping(value = "getPdpDetails", method = RequestMethod.GET)
     @ResponseBody
-    public GetPdpDetailsResponse getPdpDetails(@RequestParam long pogId){
+    public GetPdpDetailsResponse getPdpDetails(@RequestParam String pogId){
         GetPdpDetailsResponse response = new GetPdpDetailsResponse();
         try {
             PDPSro details = mobApiMockService.getPdpDetails(pogId);
