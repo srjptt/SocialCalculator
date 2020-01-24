@@ -15,6 +15,8 @@ public class CommonProductOfferGroupDTO {
     private Double avgRating;
     private Integer noOfRatings;
     private List<Categories> categories;
+    private List<String>images;
+    private Integer price;
 
 
 }

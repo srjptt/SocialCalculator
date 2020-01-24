@@ -8,5 +8,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class CreateWhatsAppGroupRequest {
-    private String subject;
+    String productName;
+    String userName;
+    String phoneNumber;
+    String imageUrl;
 }

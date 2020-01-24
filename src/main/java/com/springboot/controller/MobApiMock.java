@@ -1,6 +1,6 @@
 package com.springboot.controller;
 
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.response.GetPdpDetailsResponse;
 import com.springboot.service.MobApiMockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,9 @@ public class MobApiMock {
     public GetPdpDetailsResponse getPdpDetails(@RequestParam String pogId){
         GetPdpDetailsResponse response = new GetPdpDetailsResponse();
         try {
-            PDPSro details = mobApiMockService.getPdpDetails(pogId);
-            response.setPdpsro(details);
+            CommonProductOfferGroupDTO details = mobApiMockService.getPdpDetails(pogId);
+            if (details!=null)
+                response.setCommonProductOfferGroupDTO(details);
         }catch (Exception e){
 
         }

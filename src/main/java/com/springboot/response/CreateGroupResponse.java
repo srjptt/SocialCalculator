@@ -1,11 +1,11 @@
-package com.springboot.pojo;
+package com.springboot.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PDPSro {
+public class CreateGroupResponse {
 
-    private CommonProductOfferGroupDTO commonProductOfferGroupDTO;
+    private String link;
 }

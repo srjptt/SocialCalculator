@@ -1,4 +1,4 @@
-package com.springboot.app;
+package com.springboot.web;
 
 import com.springboot.service.StartupServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

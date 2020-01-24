@@ -3,13 +3,13 @@ package com.springboot.service;
 import com.google.common.base.Strings;
 import com.snapdeal.base.cache.CacheManager;
 import com.springboot.cache.BrandPogCache;
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
         BrandPogCache brandPogCache = new BrandPogCache();
         try {
             Set<String> lines = loadFlatFile(filePath);
-            Map<String, List<PDPSro>> brandMap = new HashMap<>();
+            Map<String, List<CommonProductOfferGroupDTO>> brandMap = new HashMap<>();
             try {
                 for (String line : lines) {
                     String[] split = line.split(",", -1);
@@ -51,15 +51,16 @@ import java.util.stream.Collectors;
 
     }
 
-    private List<PDPSro> getRecommendedPogDetail(List<String> pogIds){
+    private List<CommonProductOfferGroupDTO> getRecommendedPogDetail(List<String> pogIds){
         return pogIds.stream()
                 .map(x -> mobApiMockService.getPdpDetails(x))
                 .collect(Collectors.toList());
     }
 
-    private static Set<String> loadFlatFile(String path) throws IOException {
+    private Set<String> loadFlatFile(String file) throws IOException {
         Set<String> keys = new LinkedHashSet<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        InputStream resource = getTestData(file);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource))) {
             String value;
             while ((value = br.readLine()) != null) {
                 if (!Strings.isNullOrEmpty(value)) {
@@ -70,5 +71,14 @@ import java.util.stream.Collectors;
         return Collections.unmodifiableSet(keys);
     }
 
+    private InputStream getTestData(String filePath){
+        try {
+            ClassPathResource classPathResource = new ClassPathResource(filePath);
+            return classPathResource.getInputStream();
+        }catch (Exception e){
+
+        }
+        return null;
+    }
 
 }
