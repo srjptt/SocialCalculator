@@ -1,5 +1,6 @@
 package com.springboot.service;
 
+import com.springboot.utils.GenericHttpClientUtility;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;

@@ -1,14 +1,15 @@
 package com.springboot.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.request.CreateWhatsAppGroupRequest;
 import com.springboot.response.WhatsappResponse;
-import com.springboot.utils.SSLIgnoreClient;
+import com.springboot.utils.GenericHttpClientUtility;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
+import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @RestController
@@ -23,6 +24,14 @@ public class WhatsappController {
 
     private String msgUrl;
 
+    private GenericHttpClientUtility httpClient;
+    private ObjectMapper mapper;
+
+    @PostConstruct
+    public void init(){
+        this.httpClient = GenericHttpClientUtility.getInstance();
+        this.mapper = new ObjectMapper();
+    }
 
     @ResponseBody
     public WhatsappResponse createGroup(CreateWhatsAppGroupRequest request) {
@@ -39,7 +48,7 @@ public class WhatsappController {
         HttpResponse response = null;
         long start = System.nanoTime();
         try {
-            response = SSLIgnoreClient.httpPost(msgURL, body, headersMap);
+            response = httpClient.post(msgURL, body, headersMap, true);
         } catch (Exception e) {
         }
         return response;
