@@ -16,13 +16,38 @@ import java.util.stream.Collectors;
 public class RecommendationServiceImpl {
 
     public List<CommonProductOfferGroupDTO> getRecommendations(String brandName, Integer limit){
+        return getSROFromCache(brandName,limit);
+    /*List<CommonProductOfferGroupDTO> pdpSros = new ArrayList<>();
+    BrandPogCache brandPogCache = CacheManager.getInstance().getCache(BrandPogCache.class);
+    String[] brands = brandName.split(",",-1);
+    for (String brand : brands) {
+        pdpSros.addAll(Optional.ofNullable(brandPogCache.getBrandPogMap().get(brand)).orElse(new ArrayList<>()));
+    }
+    pdpSros = pdpSros.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    Collections.shuffle(pdpSros);
+    return (pdpSros.size() < limit) ? pdpSros : pdpSros.subList(0,limit);*/
+    }
+
+
+    private List<CommonProductOfferGroupDTO> getSROFromCache(String brandName, Integer limit){
+        //String[] brands = brandName.split(",",-1);
         List<CommonProductOfferGroupDTO> pdpSros = new ArrayList<>();
         BrandPogCache brandPogCache = CacheManager.getInstance().getCache(BrandPogCache.class);
-        String[] brands = brandName.split(",",-1);
-        for (String brand : brands) {
-            pdpSros.addAll(Optional.ofNullable(brandPogCache.getBrandPogMap().get(brand)).orElse(new ArrayList<>()));
+        brandPogCache.getBrandPogMap().forEach((k,v)->{
+            if(brandName.contains(k)){
+                pdpSros.addAll(v);
+            }
+        });
+
+        // int products = limit/stringListMap.size();
+        try {
+            if (pdpSros.size() < 10 || pdpSros.size() < limit) {
+                int size = pdpSros.size();
+                pdpSros.addAll(brandPogCache.getBrandPogMap().get("topproduct").subList(0, limit - size));
+            }
+        }catch (Exception e){
+
         }
-        pdpSros = pdpSros.stream().filter(Objects::nonNull).collect(Collectors.toList());
         Collections.shuffle(pdpSros);
         return (pdpSros.size() < limit) ? pdpSros : pdpSros.subList(0,limit);
     }
