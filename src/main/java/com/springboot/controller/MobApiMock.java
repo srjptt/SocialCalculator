@@ -18,7 +18,8 @@ public class MobApiMock {
         GetPdpDetailsResponse response = new GetPdpDetailsResponse();
         try {
             CommonProductOfferGroupDTO details = mobApiMockService.getPdpDetails(pogId);
-            response.setCommonProductOfferGroupDTO(details);
+            if (details!=null)
+                response.setCommonProductOfferGroupDTO(details);
         }catch (Exception e){
 
         }
