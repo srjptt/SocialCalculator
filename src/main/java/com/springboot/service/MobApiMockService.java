@@ -38,11 +38,13 @@ public class MobApiMockService {
             List<String> images = (List<String>) ((Map<String, Object>)(((List)dtoMap.get("offers")).get(0))).get("images");
             dto = mapper.convertValue(dtoMap, CommonProductOfferGroupDTO.class);
             dto.setImages(images);
+            if(dto.getSellingPrice()==null || dto.getPrice() == null){
+                return null;
+            }
+            return dto;
         }catch (Exception e){
             System.out.println(pogId);
+            return null;
         }
-
-        return dto;
-
     }
 }

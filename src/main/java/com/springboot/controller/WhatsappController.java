@@ -1,7 +1,7 @@
 package com.springboot.controller;
 
 import com.springboot.request.CreateWhatsAppGroupRequest;
-import com.springboot.response.WhatsappResponse;
+import com.springboot.response.CreateGroupResponse;
 import com.springboot.service.WhatsappService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,8 +15,14 @@ public class WhatsappController {
 
     @RequestMapping(value = "/createGroup", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public WhatsappResponse createGroup(@RequestBody CreateWhatsAppGroupRequest request) {
-        return null;
+    public CreateGroupResponse createGroup(@RequestBody CreateWhatsAppGroupRequest request) {
+        CreateGroupResponse response = new CreateGroupResponse();
+        try {
+            response = whatsappService.createGroup(request);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
     }
 
 

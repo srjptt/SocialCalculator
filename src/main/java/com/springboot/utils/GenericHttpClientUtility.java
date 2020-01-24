@@ -59,7 +59,19 @@ public class GenericHttpClientUtility {
         return this.sendGet(url, sslEnabled);
     }
 
-    public HttpResponse get(Map<String, Object> requestParameters, String url, boolean sslEnabled) {
+    public HttpResponse get(String url, Map<String, String> headersMap,  boolean sslEnabled) throws Exception{
+        HttpGet get = new HttpGet(url);
+        if (headersMap != null && headersMap.entrySet() !=null ) {
+            for (Map.Entry<String, String> en : headersMap.entrySet()) {
+                if(!Strings.isNullOrEmpty(en.getKey())) {
+                    get.setHeader(en.getKey(), en.getValue());
+                }
+            }
+        }
+        return execute(get, sslEnabled);
+    }
+
+    public HttpResponse get(Map<String, Object> requestParameters, String url) {
         List<NameValuePair> nameValuePairs = new ArrayList();
         Iterator var4 = requestParameters.keySet().iterator();
 
@@ -77,7 +89,7 @@ public class GenericHttpClientUtility {
 
         }
 
-        return sendGet(uri, sslEnabled);
+        return sendGet(uri, false);
     }
 
     public HttpResponse post(String url, String body, Map<String, String> headerMap, boolean sslEnabled) throws Exception {

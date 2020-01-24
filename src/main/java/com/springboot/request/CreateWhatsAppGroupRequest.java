@@ -8,9 +8,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class CreateWhatsAppGroupRequest {
-    private String subject;
-
-  /*  public String toJSONString() {
-        return JsonUtility.getInstance().toJson(this);
-    }*/
+    String productName;
+    String userName;
+    String phoneNumber;
+    String imageUrl;
 }
