@@ -6,17 +6,17 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -99,6 +99,23 @@ public class GenericHttpClientUtility {
 
     public HttpResponse post(URI url, HttpEntity httpEntity, boolean sslEnabled) {
         return sendPost(url, httpEntity, new HashMap<>(), sslEnabled);
+    }
+
+    public HttpResponse sendPatch(String endpoint, String content, Map<String, String> headers) throws IOException {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPatch httpPatch = new HttpPatch(endpoint);
+        for (String headerType : headers.keySet()) {
+            httpPatch.setHeader(headerType, headers.get(headerType));
+        }
+        if (null != content) {
+            HttpEntity httpEntity = new ByteArrayEntity(content.getBytes("UTF-8"));
+            if (headers.get("Content-Type") == null) {
+                httpPatch.setHeader("Content-Type", "application/json");
+            }
+            httpPatch.setEntity(httpEntity);
+        }
+        HttpResponse httpResponse = httpClient.execute(httpPatch);
+        return httpResponse;
     }
 
     public String getResponseContent(HttpResponse response) {
