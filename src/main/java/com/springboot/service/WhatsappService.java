@@ -1,18 +1,14 @@
 package com.springboot.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snapdeal.base.cache.CacheManager;
 import com.springboot.cache.POGGroupMappingCache;
-import com.springboot.pojo.CommonProductOfferGroupDTO;
+
 import com.springboot.pojo.WhatsappTextPayload;
-import com.springboot.request.CreateWhatsAppGroupRequest;
-import com.springboot.request.GetPdpDetailsRequest;
-import com.springboot.request.WhatsappGroupCreationRequest;
-import com.springboot.request.WhatsappMessageSentRequest;
+import com.springboot.request.*;
 import com.springboot.response.CreateGroupResponse;
-import com.springboot.response.GetPdpDetailsResponse;
 import com.springboot.utils.GenericHttpClientUtility;
-import com.springboot.utils.GroupBuyDiscountCalculatorUtility;
 import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +82,7 @@ public class WhatsappService {
                 String groupInviteLink = getGroupLink(groupId);
                 if (null != groupInviteLink) {
                     sendWhatsappLink(groupInviteLink, request.getPhoneNumber());
+                    setGroupAdmin(groupId,request.getPhoneNumber());
                     response.setLink(groupInviteLink);
                     response.setGroupId(groupId);
                 }
@@ -167,6 +164,9 @@ public class WhatsappService {
                 case GET:
                     response = httpClient.get( msgURL,headersMap, true);
                     break;
+                case PATCH:
+                    response = httpClient.sendPatch(msgURL,body,headersMap);
+                    break;
 
             }
         } catch (Exception e) {
@@ -188,5 +188,22 @@ public class WhatsappService {
 
         }
         return responseMap;
+    }
+
+    private void setGroupAdmin(String groupId , String adminId) throws JsonProcessingException {
+        String url = new StringBuilder(endPoint).append("groups").append("/").append(groupId).append("/").append("admins").toString();
+        CreateGroupAdminRequest createGroupAdminRequest = new CreateGroupAdminRequest();
+        List<String> waIds = new ArrayList<>();
+        waIds.add(adminId);
+        createGroupAdminRequest.setWa_ids(waIds);
+        getHttpResponse(url,new HashMap<>(), mapper.writeValueAsString(createGroupAdminRequest), RequestMethod.POST);
+    }
+
+    private void setGroupIcon(String groupId, String filePath) throws JsonProcessingException {
+        String url = new StringBuilder(endPoint).append("groups").append("/").append(groupId).append("/").append("icon").toString();
+        CreateGroupIconRequest createGroupIconRequest = new CreateGroupIconRequest();
+        Map<String, String> headersMap = new HashMap<>();
+        headersMap.put("Content-Type","image/png");
+       // getHttpResponse(url,headersMap, mapper.writeValueAsBytes(createGroupIconRequest),RequestMethod.POST);
     }
 }
