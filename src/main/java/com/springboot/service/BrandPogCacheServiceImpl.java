@@ -3,7 +3,7 @@ package com.springboot.service;
 import com.google.common.base.Strings;
 import com.snapdeal.base.cache.CacheManager;
 import com.springboot.cache.BrandPogCache;
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
         BrandPogCache brandPogCache = new BrandPogCache();
         try {
             Set<String> lines = loadFlatFile(filePath);
-            Map<String, List<PDPSro>> brandMap = new HashMap<>();
+            Map<String, List<CommonProductOfferGroupDTO>> brandMap = new HashMap<>();
             try {
                 for (String line : lines) {
                     String[] split = line.split(",", -1);
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 
     }
 
-    private List<PDPSro> getRecommendedPogDetail(List<String> pogIds){
+    private List<CommonProductOfferGroupDTO> getRecommendedPogDetail(List<String> pogIds){
         return pogIds.stream()
                 .map(x -> mobApiMockService.getPdpDetails(x))
                 .collect(Collectors.toList());

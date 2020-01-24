@@ -1,7 +1,7 @@
 package com.springboot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.request.GetPdpDetailsRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.StringEntity;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 @Service("mobApiMockService")
@@ -23,8 +24,8 @@ public class MobApiMockService {
         this.mapper = new ObjectMapper();
     }
 
-    public PDPSro getPdpDetails(String pogId){
-        PDPSro sro = new PDPSro();
+    public CommonProductOfferGroupDTO getPdpDetails(String pogId){
+        CommonProductOfferGroupDTO dto = new CommonProductOfferGroupDTO();
         String url = "http://mobileapi.snapdeal.com/service/mobapi/getPdpDetails";
         try{
             GetPdpDetailsRequest request = new GetPdpDetailsRequest(Long.valueOf(pogId));
@@ -32,14 +33,17 @@ public class MobApiMockService {
             HttpResponse response = httpClient.post(new URI(url), entity);
             String data = httpClient.getResponseContent(response);
             Map<String, Object> responseData =  mapper.readValue(data, Map.class);
-            Map<String, Object> pdpSroMap = (Map<String, Object>) responseData.get("pdpsro");
-            sro = mapper.convertValue(pdpSroMap, PDPSro.class);
+            Map<String, Object> dtoMap = (Map<String, Object>) ((Map<String, Object>) responseData.get("pdpsro")).get("commonProductOfferGroupDTO");
+            List<String> images = (List<String>) ((Map<String, Object>)(((List)dtoMap.get("offers")).get(0))).get("images");
+            dto.setImages(images);
+            dto = mapper.convertValue(dtoMap, CommonProductOfferGroupDTO.class);
         }catch (Exception e){
+            System.out.println(pogId);
             e.printStackTrace();
 
         }
 
-        return sro;
+        return dto;
 
     }
 }

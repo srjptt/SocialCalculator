@@ -1,10 +1,11 @@
 package com.springboot.response;
 
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
+
 import lombok.Data;
 
 @Data
 public class GetPdpDetailsResponse {
 
-    private PDPSro pdpsro;
+    private CommonProductOfferGroupDTO commonProductOfferGroupDTO;
 }
