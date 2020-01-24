@@ -54,6 +54,7 @@ import java.util.stream.Collectors;
     private List<CommonProductOfferGroupDTO> getRecommendedPogDetail(List<String> pogIds){
         return pogIds.stream()
                 .map(x -> mobApiMockService.getPdpDetails(x))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
