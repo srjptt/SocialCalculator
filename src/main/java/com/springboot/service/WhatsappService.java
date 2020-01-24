@@ -43,7 +43,7 @@ public class WhatsappService {
     public CreateGroupResponse createGroup(CreateWhatsAppGroupRequest request) {
         CreateGroupResponse response = new CreateGroupResponse();
         try {
-            String groupId = createGroup(request.getProductName(), request.getUserName());
+            String groupId = createGroup(request.getProductName());
             if (null != groupId) {
                 String groupInviteLink = getGroupLink(groupId);
                 if (null != groupInviteLink) {
@@ -57,8 +57,9 @@ public class WhatsappService {
         return response;
     }
 
-    private String createGroup(String productName, String userName) {
-        String subject = "SD Group Buy " + productName.substring(0,9);
+    private String createGroup(String productName) {
+        String subject = "SD " + productName;
+        subject = subject.substring(0,24);
         WhatsappGroupCreationRequest request = new WhatsappGroupCreationRequest(subject);
         String url = endPoint+"groups";
         String groupId = "";
@@ -105,7 +106,7 @@ public class WhatsappService {
                         new WhatsappTextPayload(groupInviteLink));
                 messageSentRequest.setRecipient_type("individual");
                 HttpResponse response = getHttpResponse(url, new HashMap<>(), mapper.writeValueAsString(messageSentRequest) , RequestMethod.POST);
-                if (response.getStatusLine().getStatusCode() != 201){
+                if (response.getStatusLine().getStatusCode() == 201){
                     return "sent successfully";
                 } else
                     return "failed to send invite link to "+phoneNumber;

@@ -1,11 +1,13 @@
 package com.springboot.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.springboot.pojo.WhatsappTextPayload;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class WhatsappMessageSentRequest {
     private String to;
     private String type = "text";

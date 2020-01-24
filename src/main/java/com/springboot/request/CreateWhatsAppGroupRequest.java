@@ -11,4 +11,5 @@ public class CreateWhatsAppGroupRequest {
     String productName;
     String userName;
     String phoneNumber;
+    String imageUrl;
 }
