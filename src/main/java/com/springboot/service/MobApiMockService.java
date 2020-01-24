@@ -1,10 +1,8 @@
 package com.springboot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.pojo.PDPSro;
 import com.springboot.request.GetPdpDetailsRequest;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.StringEntity;
 import org.springframework.stereotype.Service;
@@ -25,11 +23,11 @@ public class MobApiMockService {
         this.mapper = new ObjectMapper();
     }
 
-    public PDPSro getPdpDetails(long pogId){
+    public PDPSro getPdpDetails(String pogId){
         PDPSro sro = new PDPSro();
         String url = "http://mobileapi.snapdeal.com/service/mobapi/getPdpDetails";
         try{
-            GetPdpDetailsRequest request = new GetPdpDetailsRequest(pogId);
+            GetPdpDetailsRequest request = new GetPdpDetailsRequest(Long.valueOf(pogId));
             StringEntity entity = new StringEntity(mapper.writeValueAsString(request));
             HttpResponse response = httpClient.post(new URI(url), entity);
             String data = httpClient.getResponseContent(response);
