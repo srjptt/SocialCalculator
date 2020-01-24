@@ -6,11 +6,10 @@ import com.springboot.cache.BrandPogCache;
 import com.springboot.pojo.PDPSro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,11 +57,10 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
-    private Set<String> loadFlatFile(String path) throws IOException {
+    private Set<String> loadFlatFile(String file) throws IOException {
         Set<String> keys = new LinkedHashSet<>();
-
-
-        try (BufferedReader br = new BufferedReader(new FileReader(getTestData(path)))) {
+        InputStream resource = getTestData(file);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource))) {
             String value;
             while ((value = br.readLine()) != null) {
                 if (!Strings.isNullOrEmpty(value)) {
@@ -73,11 +71,10 @@ import java.util.stream.Collectors;
         return Collections.unmodifiableSet(keys);
     }
 
-    private File getTestData(String filePath){
+    private InputStream getTestData(String filePath){
         try {
-            File data  = new File(
-                    getClass().getClassLoader().getResource(filePath).getFile());
-            return data;
+            ClassPathResource classPathResource = new ClassPathResource(filePath);
+            return classPathResource.getInputStream();
         }catch (Exception e){
 
         }
