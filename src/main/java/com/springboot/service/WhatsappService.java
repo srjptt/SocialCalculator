@@ -61,7 +61,7 @@ public class WhatsappService {
     public void sendUpdateInOffer(String groupId, String pogId){
         try {
             String text = new StringBuilder("Checkout link to avail offer!!!").append("http://10.41.97.38:3000/product/").append(pogId)
-                    .append("?groupId=").append("918130222868-1579878822").toString();
+                    .append("?groupId=").append(groupId).toString();
             String url = new StringBuilder(endPoint).append("messages/").toString();
             WhatsappMessageSentRequest request = new WhatsappMessageSentRequest(groupId, new WhatsappTextPayload(text));
             request.setRecipient_type("group");
