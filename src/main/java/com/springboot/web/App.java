@@ -1,7 +1,9 @@
-package com.springboot.app;
+package com.springboot.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -11,26 +13,16 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @SpringBootApplication
 @ComponentScan({"com.springboot.*"})
-public class App /*extends SpringBootServletInitializer*/ {
-
-
+public class App extends SpringBootServletInitializer {
     public static void main(String[] args){
                      SpringApplication.run(App.class, args);
 
     }
 
-   /* *//**
-     * Used when run as JAR
-     */
-    /*public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }*/
-
-    /**
-     * Used when run as WAR
-     */
-   /* @Override
+    @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(App.class);
-    }*/
+        return super.configure(builder);
+    }
+
+
 }

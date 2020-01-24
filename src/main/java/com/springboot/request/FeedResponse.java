@@ -1,7 +1,7 @@
 package com.springboot.request;
 
 import com.snapdeal.base.model.common.ServiceResponse;
-import com.springboot.pojo.PDPSro;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,5 +15,5 @@ import java.util.List;
 @ToString
 public class FeedResponse extends ServiceResponse {
 
-    private List<PDPSro> pogList;
+    private List<CommonProductOfferGroupDTO> pogList;
 }
