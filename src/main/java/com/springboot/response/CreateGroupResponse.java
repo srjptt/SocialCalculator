@@ -8,4 +8,5 @@ import lombok.Data;
 public class CreateGroupResponse {
 
     private String link;
+    private String groupId;
 }

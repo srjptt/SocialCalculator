@@ -3,6 +3,7 @@ package com.springboot.controller;
 import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.response.GetPdpDetailsResponse;
 import com.springboot.service.MobApiMockService;
+import com.springboot.utils.GroupBuyDiscountCalculatorUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,15 @@ public class MobApiMock {
 
     @RequestMapping(value = "getPdpDetails", method = RequestMethod.GET)
     @ResponseBody
-    public GetPdpDetailsResponse getPdpDetails(@RequestParam String pogId){
+    public GetPdpDetailsResponse getPdpDetails(@RequestParam String pogId , @RequestParam(value = "groupId", required = false) String groupId){
         GetPdpDetailsResponse response = new GetPdpDetailsResponse();
         try {
             CommonProductOfferGroupDTO details = mobApiMockService.getPdpDetails(pogId);
-            if (details!=null)
+            if (details!=null) {
                 response.setCommonProductOfferGroupDTO(details);
+                int groupBuyDiscount = GroupBuyDiscountCalculatorUtility.discountValue(groupId, details.getSellingPrice());
+                response.getCommonProductOfferGroupDTO().setGroupBuyDiscount(groupBuyDiscount);
+            }
         }catch (Exception e){
 
         }

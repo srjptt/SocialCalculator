@@ -1,12 +1,18 @@
 package com.springboot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snapdeal.base.cache.CacheManager;
+import com.springboot.cache.POGGroupMappingCache;
+import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.pojo.WhatsappTextPayload;
 import com.springboot.request.CreateWhatsAppGroupRequest;
+import com.springboot.request.GetPdpDetailsRequest;
 import com.springboot.request.WhatsappGroupCreationRequest;
 import com.springboot.request.WhatsappMessageSentRequest;
 import com.springboot.response.CreateGroupResponse;
+import com.springboot.response.GetPdpDetailsResponse;
 import com.springboot.utils.GenericHttpClientUtility;
+import com.springboot.utils.GroupBuyDiscountCalculatorUtility;
 import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("whatsappService")
 public class WhatsappService {
@@ -32,6 +35,9 @@ public class WhatsappService {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private MobApiMockService mobApiMockService;
+
     @PostConstruct
     public void init() {
         this.httpClient = GenericHttpClientUtility.getInstance();
@@ -40,15 +46,48 @@ public class WhatsappService {
         this.token = env.getProperty("whatsapp.token");
     }
 
+    public boolean urlAccessImpression(String groupId, String userId){
+        boolean result = false;
+        POGGroupMappingCache cache = CacheManager.getInstance().getCache(POGGroupMappingCache.class);
+        if (cache.getGroupDetailsForGroupBuy().containsKey(groupId)){
+            result = cache.getGroupDetailsForGroupBuy().get(groupId).contains(userId);
+            cache.getGroupDetailsForGroupBuy().get(groupId).add(userId);
+            return result;
+
+        }else {
+            Set<String> users = new HashSet<>();
+            users.add(userId);
+            cache.getGroupDetailsForGroupBuy().put(groupId, users);
+            return true;
+        }
+    }
+
+    public void sendUpdateInOffer(String groupId, String pogId){
+        try {
+            String text = new StringBuilder("Checkout link to avail offer!!!").append("http://10.41.97.38:3000/product/").append(pogId)
+                    .append("?groupId=").append("918130222868-1579878822").toString();
+            String url = new StringBuilder(endPoint).append("messages/").toString();
+            WhatsappMessageSentRequest request = new WhatsappMessageSentRequest(groupId, new WhatsappTextPayload(text));
+            request.setRecipient_type("group");
+            request.setPreview_url(false);
+            request.setRender_mentions(true);
+            getHttpResponse(url, new HashMap<>(), mapper.writeValueAsString(request) , RequestMethod.POST);
+        }catch (Exception e){
+
+        }
+    }
+
     public CreateGroupResponse createGroup(CreateWhatsAppGroupRequest request) {
         CreateGroupResponse response = new CreateGroupResponse();
         try {
             String groupId = createGroup(request.getProductName());
             if (null != groupId) {
+                LOGGER.info("Group Id created : "+ groupId);
                 String groupInviteLink = getGroupLink(groupId);
                 if (null != groupInviteLink) {
                     sendWhatsappLink(groupInviteLink, request.getPhoneNumber());
                     response.setLink(groupInviteLink);
+                    response.setGroupId(groupId);
                 }
             }
         } catch (Exception e) {
@@ -59,7 +98,8 @@ public class WhatsappService {
 
     private String createGroup(String productName) {
         String subject = "SD " + productName;
-        subject = subject.substring(0,24);
+        if (subject.length()>24)
+            subject = subject.substring(0,24);
         WhatsappGroupCreationRequest request = new WhatsappGroupCreationRequest(subject);
         String url = endPoint+"groups";
         String groupId = "";

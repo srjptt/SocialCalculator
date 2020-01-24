@@ -25,6 +25,15 @@ public class WhatsappController {
         return response;
     }
 
-
-
+    @RequestMapping(value = "/urlAccessImpression", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String createGroup(@RequestParam String groupId, @RequestParam String userId, @RequestParam String pogId) {
+        try {
+            if(whatsappService.urlAccessImpression(groupId, userId))
+                whatsappService.sendUpdateInOffer(groupId, pogId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "updated successfully";
+    }
 }

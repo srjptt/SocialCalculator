@@ -1,6 +1,8 @@
 package com.springboot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snapdeal.base.cache.CacheManager;
+import com.springboot.cache.POGGroupMappingCache;
 import com.springboot.pojo.CommonProductOfferGroupDTO;
 import com.springboot.request.GetPdpDetailsRequest;
 import com.springboot.utils.GenericHttpClientUtility;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service("mobApiMockService")
 public class MobApiMockService {
@@ -23,6 +27,10 @@ public class MobApiMockService {
     public void init(){
         this.httpClient = GenericHttpClientUtility.getInstance();
         this.mapper = new ObjectMapper();
+        Map<String, Set<String>> groupBuyMapping = new HashMap<>();
+        POGGroupMappingCache cache = new POGGroupMappingCache();
+        cache.setGroupDetailsForGroupBuy(groupBuyMapping);
+        CacheManager.getInstance().setCache(cache);
     }
 
     public CommonProductOfferGroupDTO getPdpDetails(String pogId){

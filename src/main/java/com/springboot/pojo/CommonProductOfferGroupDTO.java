@@ -10,13 +10,14 @@ public class CommonProductOfferGroupDTO {
 
     private Long id;
     private String title;
-    private Long sellingPrice;
+    private Integer sellingPrice;
     private Integer percentOff;
     private Double avgRating;
     private Integer noOfRatings;
     private List<Categories> categories;
     private List<String>images;
     private Integer price;
+    private Integer groupBuyDiscount;
 
 
 }
